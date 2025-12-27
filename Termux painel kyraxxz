@@ -1,0 +1,179 @@
+#!/bin/bash
+
+# ===== SENHA =====
+clear
+echo "=============================="
+echo "      PAINEL KYRAXXZ 🔐       "
+echo "=============================="
+read -s -p "Senha: " senha
+echo
+[ "$senha" != "3031" ] && echo "Senha incorreta!" && sleep 2 && exit
+
+# ===== LIMPEZA INICIAL =====
+pkg clean -y >/dev/null 2>&1
+pkg autoclean -y >/dev/null 2>&1
+history -c
+
+painel_topo() {
+clear
+echo "=============================="
+echo " KYRAXXZ - PAINEL DE SISTEMA "
+echo "=============================="
+echo "Hora: $(date +"%H:%M:%S")"
+echo "IP: $(curl -s ifconfig.me)"
+echo "Temp: $(curl -s wttr.in/?format="%t")"
+echo "=============================="
+echo
+}
+
+while true; do
+painel_topo
+echo "1) Otimização (30 opções)"
+echo "2) Informações do celular"
+echo "3) Internet"
+echo "4) Gerenciador de apps"
+echo "0) Sair"
+read -p "Escolha: " menu
+
+case $menu in
+
+# ===== OTIMIZAÇÃO =====
+1)
+while true; do
+painel_topo
+echo "====== OTIMIZAÇÃO AVANÇADA ======"
+echo "01 Limpar cache do Termux"
+echo "02 Autoclean pacotes"
+echo "03 Atualizar sistema"
+echo "04 Limpar histórico"
+echo "05 Limpar ~/.cache"
+echo "06 Limpar Downloads"
+echo "07 Limpar logs"
+echo "08 Limpar temporários"
+echo "09 Matar processos zumbis"
+echo "10 Liberar memória"
+echo "11 Reiniciar Termux"
+echo "12 Limpar thumbnails"
+echo "13 Uso de CPU"
+echo "14 Uso de RAM"
+echo "15 Armazenamento"
+echo "16 Processos ativos"
+echo "17 Matar processos pesados"
+echo "18 Limpeza profunda TOTAL"
+echo "19 Otimização rápida"
+echo "20 Status do sistema"
+echo "21 Uptime"
+echo "22 Kernel"
+echo "23 Versão Android"
+echo "24 Sensores"
+echo "25 Apps rodando"
+echo "26 Limpar sockets"
+echo "27 Compactar cache"
+echo "28 Benchmark simples"
+echo "29 Sincronizar disco"
+echo "30 Voltar"
+read -p ">> " o
+
+case $o in
+1) pkg clean -y ;;
+2) pkg autoclean -y ;;
+3) pkg upgrade -y ;;
+4) history -c ;;
+5) rm -rf ~/.cache/* ;;
+6) rm -rf ~/downloads/* ;;
+7) rm -rf ~/.log/* ;;
+8) rm -rf /tmp/* ;;
+9) pkill -9 -u $USER ;;
+10) sync ;;
+11) pkill -f termux ;;
+12) rm -rf ~/.thumbnails ;;
+13) top ;;
+14) free -h ;;
+15) df -h ;;
+16) ps ;;
+17) pkill -f app_process ;;
+18) pkg clean -y && pkg autoclean -y && history -c ;;
+19) pkg clean -y && sync ;;
+20) df -h && free -h ;;
+21) uptime ;;
+22) uname -a ;;
+23) getprop ro.build.version.release ;;
+24) termux-sensor ;;
+25) ps | grep app_process ;;
+26) ss -s ;;
+27) tar -czf cache.tar.gz ~/.cache ;;
+28) time ls ;;
+29) sync ;;
+30) break ;;
+esac
+read -p "ENTER..."
+done
+;;
+
+# ===== INFO =====
+2)
+while true; do
+painel_topo
+echo "1) Bateria"
+echo "2) RAM"
+echo "3) Armazenamento"
+echo "4) Sistema"
+echo "5) Voltar"
+read -p ">> " i
+case $i in
+1) termux-battery-status ;;
+2) free -h ;;
+3) df -h ;;
+4) neofetch ;;
+5) break ;;
+esac
+read -p "ENTER..."
+done
+;;
+
+# ===== INTERNET =====
+3)
+while true; do
+painel_topo
+echo "1) Testar internet"
+echo "2) IP detalhado"
+echo "3) Abrir Google"
+echo "4) Voltar"
+read -p ">> " n
+case $n in
+1) ping -c 4 google.com ;;
+2) curl ifconfig.me/all ;;
+3) termux-open-url https://google.com ;;
+4) break ;;
+esac
+read -p "ENTER..."
+done
+;;
+
+# ===== APPS =====
+4)
+while true; do
+painel_topo
+echo "1) Listar apps"
+echo "2) Buscar app"
+echo "3) Abrir app"
+echo "4) Fechar app"
+echo "5) Voltar"
+read -p ">> " a
+case $a in
+1) pm list packages | sed 's/package://';;
+2) read -p "Nome: " nome; pm list packages | grep "$nome";;
+3) read -p "Package: " p; am start -n $(cmd package resolve-activity --brief $p | tail -n 1);;
+4) read -p "Package: " p; am force-stop $p;;
+5) break ;;
+esac
+read -p "ENTER..."
+done
+;;
+
+0)
+termux-open-url "https://www.google.com/search?q=ATE+MAIS!"
+exit
+;;
+esac
+done
